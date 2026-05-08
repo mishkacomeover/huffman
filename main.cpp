@@ -228,7 +228,7 @@ int main() {
     
     // сравнение iso и кодов Хаффмана
     int weight_in_iso = weight_iso(input);
-    int weight_huff;
+    int weight_huff = 0;
     for (int i = 0; i < chastoti.size(); i++) {
             wchar_t symbol = chastoti[i].first;
             int chastota = chastoti[i].second;
@@ -238,8 +238,7 @@ int main() {
                 }
             }
     }
-
-    float koeficent = ((weight_in_iso - weight_huff) / weight_in_iso) * 100;
+    float koeficent = (float(weight_huff) / weight_in_iso) * 100;
     cout << endl;
     wcout << L"---------Сравнение utf-32, iso, кодов Хаффмана---------------" << endl
         << L"Вес строки в utf-32 = " << input.length() * 32 << L" бит" << endl
