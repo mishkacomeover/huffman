@@ -187,6 +187,15 @@ void exportToDot(Node* root, const string& filename) {
     system(command.c_str());  // выполняет команду как в консоли
 }
 
+// получение веса строки в кодировке iso
+int weight_iso (wstring str) {
+    int weight = 0;
+    for (wchar_t x : str) {
+        if (int(char(x)) < 255) weight += 8;
+    }
+    return weight;
+}
+
 int main() {
 
     setlocale(LC_ALL, "");
@@ -217,5 +226,27 @@ int main() {
 
     exportToDot(root, "huffman_tree.dot");
     
+    // сравнение iso и кодов Хаффмана
+    int weight_in_iso = weight_iso(input);
+    int weight_huff;
+    for (int i = 0; i < chastoti.size(); i++) {
+            wchar_t symbol = chastoti[i].first;
+            int chastota = chastoti[i].second;
+            for (int i = 0; i < codes.size(); i++) {
+                if (symbol == codes[i].first) {
+                    weight_huff += codes[i].second.length() * chastota;
+                }
+            }
+    }
+
+    float koeficent = ((weight_in_iso - weight_huff) / weight_in_iso) * 100;
+    cout << endl;
+    wcout << L"---------Сравнение utf-32, iso, кодов Хаффмана---------------" << endl
+        << L"Вес строки в utf-32 = " << input.length() * 32 << L" бит" << endl
+        << L"Вес строки в iso = " << weight_in_iso << L" бит" << endl
+        << L"Вес строки после сзжатия алгоритмом Хаффмана = " << weight_huff << L" бит" << endl
+        << L"Коэффицент сжатия (между iso и huff): " << koeficent << L" %" << endl
+        << L"Экономия = " << weight_in_iso - weight_huff << L" бит" << endl;
+
     return 0;
 }
